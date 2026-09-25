@@ -1,0 +1,8 @@
+:root { --content-gap: 22px; }
+.post-content { line-height: 1.78; word-break: keep-all; }
+.post-content h2 { margin: 40px 0 16px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.post-content h3 { margin: 30px 0 12px; }
+.post-content blockquote { border-inline-start: 4px solid var(--primary); }
+.post-content code { word-break: break-word; }
+.post-content pre code { word-break: normal; }
+.first-entry { min-height: 240px; }

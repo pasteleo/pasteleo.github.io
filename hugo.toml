@@ -1,0 +1,129 @@
+baseURL = "https://pasteleo.github.io/"
+languageCode = "ko-kr"
+title = "Peter의 기획 노트"
+theme = "PaperMod"
+
+enableInlineShortcodes = true
+enableRobotsTXT = true
+buildDrafts = false
+buildFuture = false
+buildExpired = false
+enableEmoji = true
+pygmentsUseClasses = true
+hasCJKLanguage = true
+summaryLength = 50
+
+[pagination]
+  pagerSize = 8
+
+[minify]
+  disableXML = true
+  minifyOutput = true
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[params]
+  env = "production"
+  title = "Peter의 기획 노트"
+  description = "IT 기획자가 집에 세운 실험실에서 무엇을 왜 만들었고, 무엇을 버렸고, 지금은 AI 에이전트와 어떻게 운영하는지 — 기술보다 판단을 기록합니다. 글의 초안은 AI 에이전트가 쓰고, 검토·승인·발행은 사람이 합니다."
+  keywords = ["IT기획", "홈랩", "AI에이전트", "운영", "아키텍처", "회고"]
+  author = "Peter"
+  DateFormat = "2006-01-02"
+  defaultTheme = "auto"
+  disableThemeToggle = false
+  ShowReadingTime = true
+  ShowShareButtons = false
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowWordCount = true
+  ShowRssButtonInSectionTermList = true
+  ShowToc = true
+  TocOpen = false
+  UseHugoToc = true
+  comments = false
+  hideMeta = false
+  hideSummary = false
+  showtoc = true
+  aiDisclosure = "이 블로그의 글은 AI 에이전트(Hermes)가 초안을 쓰고, 제가 검토·승인해 발행합니다. 화자는 저이고, 판단과 책임도 제 것입니다."
+
+  [params.homeInfoParams]
+    Title = "Peter의 기획 노트"
+    Content = """
+IT 기획자가 집에 세운 작은 실험실의 기록입니다. 설치 매뉴얼이 아니라 **왜 그 고민을 했고 → 무엇을 선택했고 → 그래서 어떻게 됐는지**를 씁니다. 잘 된 것보다 되돌린 결정이 더 많이 나옵니다.
+
+> 이 블로그의 글은 **AI 에이전트(Hermes)가 초안을 쓰고, 제가 검토·승인해 발행**합니다. 화자는 저이고, 판단과 책임도 제 것입니다. 자세한 방식은 [소개](/about/)에 있습니다.
+"""
+
+  [[params.socialIcons]]
+    name = "rss"
+    url = "/index.xml"
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/pasteleo"
+
+  [params.assets]
+    disableHLJS = true
+    favicon = "/favicon.svg"
+    favicon16x16 = "/favicon.svg"
+    favicon32x32 = "/favicon.svg"
+    apple_touch_icon = "/favicon.svg"
+
+  [params.fuseOpts]
+    isCaseSensitive = false
+    shouldSort = true
+    location = 0
+    distance = 1000
+    threshold = 0.4
+    minMatchCharLength = 0
+    keys = ["title", "permalink", "summary", "content"]
+
+[markup]
+  [markup.highlight]
+    noClasses = false
+    codeFences = true
+    guessSyntax = true
+    lineNos = false
+    style = "github-dark"
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+
+[menu]
+  [[menu.main]]
+    identifier = "posts"
+    name = "글"
+    url = "/posts/"
+    weight = 10
+  [[menu.main]]
+    identifier = "series"
+    name = "시리즈"
+    url = "/series/"
+    weight = 20
+  [[menu.main]]
+    identifier = "tags"
+    name = "태그"
+    url = "/tags/"
+    weight = 30
+  [[menu.main]]
+    identifier = "archives"
+    name = "아카이브"
+    url = "/archives/"
+    weight = 40
+  [[menu.main]]
+    identifier = "about"
+    name = "소개"
+    url = "/about/"
+    weight = 50
+  [[menu.main]]
+    identifier = "search"
+    name = "검색"
+    url = "/search/"
+    weight = 60
+
+[taxonomies]
+  series = "series"
+  tag = "tags"

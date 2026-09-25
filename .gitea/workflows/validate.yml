@@ -1,0 +1,44 @@
+# tech-blog — 공개안전 가드 + 통과 시에만 GitHub Pages 저장소로 미러 (ai-native-homelab 의 validate.yml 과 같은 원칙)
+#   guard : 트리 전체를 내부 IP·내부 도메인·토큰·개인키·이메일 패턴으로 검사. 하나라도 걸리면 실패 = 미러 안 됨.
+#   mirror: main push 이고 guard 성공일 때만 github.com/pasteleo/pasteleo.github.io 로 push (시크릿 GH_BLOG_TOKEN).
+name: validate
+on:
+  push:
+    branches: [main]
+  pull_request:
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+jobs:
+  guard:
+    runs-on: host
+    steps:
+      - name: checkout
+        run: |
+          REF="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-main}}"
+          rm -rf src && git clone -q --depth 1 --branch "$REF" "https://x-access-token:${GITHUB_TOKEN}@git.sunhome.internal/${GITHUB_REPOSITORY}.git" src
+      - name: 공개안전 검사
+        run: |
+          cd src
+          set +e
+          FAIL=0
+          # 검사 대상 = 발행되는 것(content/static/assets/hugo.toml). 워크플로 자체(.gitea/.github)와 벤더 테마는 제외
+          scan() { grep -rnE --exclude-dir=.git --exclude-dir=.gitea --exclude-dir=.github --exclude-dir=themes "$1" . && { echo "GUARD-FAIL [$2]"; FAIL=1; }; }
+          scan '\b172\.16\.[0-9]{1,3}\.[0-9]{1,3}\b' '내부 IP'
+          scan '\b192\.168\.[0-9]{1,3}\.[0-9]{1,3}\b' '내부 IP'
+          scan '\b10\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\b' '내부 IP'
+          scan 'sunhome\.internal|sunserver\.com' '내부 도메인'
+          scan '\b(ghp|gho|ghs|ghu)_[A-Za-z0-9]{20,}|glpat-[A-Za-z0-9_-]{20,}|xox[bap]-[A-Za-z0-9-]{10,}|\bAKIA[0-9A-Z]{16}\b' '토큰'
+          scan '-----BEGIN [A-Z ]*PRIVATE KEY-----' '개인키'
+          scan '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}' '이메일'
+          [ "$FAIL" = 0 ] && echo "GUARD-PASS" || exit 1
+  mirror:
+    needs: [guard]
+    runs-on: host
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: push to GitHub (gated)
+        run: |
+          rm -rf msrc && git clone -q --mirror "https://x-access-token:${GITHUB_TOKEN}@git.sunhome.internal/${GITHUB_REPOSITORY}.git" msrc
+          cd msrc
+          git push --force "https://x-access-token:${{ secrets.GH_BLOG_TOKEN }}@github.com/pasteleo/pasteleo.github.io.git" 'refs/heads/main:refs/heads/main'
+          echo "mirrored $(git rev-parse main)"
